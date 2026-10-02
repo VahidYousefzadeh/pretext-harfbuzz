@@ -38,7 +38,7 @@ export class DemoRenderer {
 
   static async create(readFont: FontReader): Promise<DemoRenderer> {
     const book = new FontBook();
-    for (const { file, face } of FONT_FILES) book.add(face, await readFont(file));
+    for (const { file, face } of FONT_FILES) await book.add(face, await readFont(file));
     installHarfBuzzMeasurer(book, { locale: "en" });
     return new DemoRenderer(book);
   }

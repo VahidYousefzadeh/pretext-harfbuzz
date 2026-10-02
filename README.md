@@ -16,7 +16,7 @@ import { measureLineStats, prepareWithSegments } from "@chenglou/pretext";
 import { FontBook, installHarfBuzzMeasurer } from "pretext-harfbuzz";
 
 const fonts = new FontBook();
-fonts.add({ family: "Inter" }, await readFile("Inter-Regular.ttf"));
+await fonts.add({ family: "Inter" }, await readFile("Inter-Regular.ttf"));
 installHarfBuzzMeasurer(fonts, { locale: "en" });
 
 const text = prepareWithSegments("Hello, headless world. No browser measured this.", "16px Inter");

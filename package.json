@@ -32,7 +32,8 @@
     "render": "node scripts/render.ts"
   },
   "dependencies": {
-    "harfbuzzjs": "^1.6.2"
+    "harfbuzzjs": "^1.6.2",
+    "woff2-encoder": "^2.0.0"
   },
   "peerDependencies": {
     "@chenglou/pretext": "^0.0.9"

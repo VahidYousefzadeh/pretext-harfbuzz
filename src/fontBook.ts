@@ -16,7 +16,7 @@ export type FaceDescription = {
 
 const buffer = new hb.Buffer();
 
-/** A font file loaded into HarfBuzz. All values are in font units. */
+/** TTF or OTF data loaded into HarfBuzz. All values are in font units. */
 export class Face {
   readonly key: FaceKey;
   readonly upem: number;
@@ -27,6 +27,8 @@ export class Face {
 
   constructor(key: FaceKey, bytes: ArrayBuffer | Uint8Array) {
     const face = new hb.Face(new hb.Blob(bytes));
+    // HarfBuzz does not reject data it cannot read. It gives back an empty face, and every width is then wrong.
+    if (face.collectUnicodes().length === 0) throw new Error(`HarfBuzz cannot read the font data for "${key.family}".`);
     this.key = key;
     this.font = new hb.Font(face);
     this.upem = face.upem;
@@ -52,10 +54,10 @@ export class FontBook {
     return this.list;
   }
 
-  /** Adds a TTF or OTF file. */
-  add(description: FaceDescription, bytes: ArrayBuffer | Uint8Array): Face {
+  /** Adds a TTF, OTF or WOFF2 file. */
+  async add(description: FaceDescription, bytes: ArrayBuffer | Uint8Array): Promise<Face> {
     const key: FaceKey = { family: description.family, weight: description.weight ?? 400, style: description.style ?? "normal" };
-    const face = new Face(key, bytes);
+    const face = new Face(key, await unpack(bytes));
     this.list.push(face);
     return face;
   }
@@ -76,4 +78,13 @@ export class FontBook {
     const face = this.resolve(font);
     return (face.advance(text) * font.sizePx) / face.upem;
   }
+}
+
+// HarfBuzz reads TTF and OTF data only. A WOFF2 file holds the same data compressed, so we unpack it first.
+// The decoder loads only when a WOFF2 file arrives, so a page that uses TTF fonts never downloads it.
+async function unpack(bytes: ArrayBuffer | Uint8Array): Promise<ArrayBuffer | Uint8Array> {
+  const signature = String.fromCharCode(...new Uint8Array(bytes.slice(0, 4)));
+  if (signature !== "wOF2") return bytes;
+  const { default: decompress } = await import("woff2-encoder/decompress");
+  return decompress(bytes);
 }

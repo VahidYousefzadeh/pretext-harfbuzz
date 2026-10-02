@@ -92,7 +92,7 @@ import { FontBook, installHarfBuzzMeasurer } from "pretext-harfbuzz";
 
 <span class="c">// 1. Load the font, and let pretext measure with it through HarfBuzz.</span>
 const fonts = new FontBook();
-fonts.add({ family: "Inter" }, await readFile("Inter-Regular.ttf"));
+await fonts.add({ family: "Inter" }, await readFile("Inter-Regular.ttf"));
 installHarfBuzzMeasurer(fonts, { locale: "en" });
 
 <span class="c">// 2. Wrap the text at 200 px. How many lines, and how wide is the longest one?</span>
