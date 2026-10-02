@@ -1,0 +1,46 @@
+{
+  "name": "pretext-harfbuzz",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Let pretext measure text with HarfBuzz (WebAssembly), so it runs without a browser and gives the same layout in Node and in every browser.",
+  "keywords": ["pretext", "harfbuzz", "text layout", "text measurement", "headless", "node"],
+  "homepage": "https://vahidyousefzadeh.com/pretext-harfbuzz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VahidYousefzadeh/pretext-harfbuzz.git"
+  },
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "src", "README.md", "LICENSE"],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:lib && npm run build:site",
+    "build:lib": "tsc -p tsconfig.lib.json",
+    "build:site": "node scripts/render.ts --answers public/node-results.json && vite build",
+    "preview": "vite preview --port 5208 --strictPort",
+    "prepare": "npm run build:lib",
+    "check": "tsc --noEmit",
+    "render": "node scripts/render.ts"
+  },
+  "dependencies": {
+    "harfbuzzjs": "^1.6.2"
+  },
+  "peerDependencies": {
+    "@chenglou/pretext": "^0.0.9"
+  },
+  "devDependencies": {
+    "@chenglou/pretext": "^0.0.9",
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  }
+}

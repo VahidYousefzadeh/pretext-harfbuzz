@@ -1,0 +1,7 @@
+node_modules/
+# The library build (npm run build:lib) and the demo site (npm run build:site).
+dist/
+site/
+# Written by `npm run build:site` for the static page; the dev server asks Node live instead.
+public/node-results.json
+.claude/
