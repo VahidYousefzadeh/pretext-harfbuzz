@@ -54,7 +54,7 @@ export default defineConfig({
   plugins: [nodeRenderEndpoint()],
   // harfbuzzjs loads its .wasm file from next to itself, and pre-bundling breaks that.
   optimizeDeps: { exclude: ["harfbuzzjs"] },
-  // dist/ is taken by the library build.
-  build: { target: "es2022", outDir: "site" },
+  // dist/ is taken by the library build. Safari 15 (iPhone 7's last iOS) cannot parse class static blocks.
+  build: { target: ["chrome87", "edge88", "firefox78", "safari15"], outDir: "site" },
   server: { port: 5207, strictPort: true },
 });
